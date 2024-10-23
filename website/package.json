@@ -155,6 +155,7 @@
     "source-map": "^0.6.1",
     "sql-parser-cst": "^0.5.1",
     "sqlite-parser": "^1.0.0-rc3",
+    "stillat-blade-parser": "1.2.0",
     "svelte": "^3.52.0",
     "tenko": "^1.0.6",
     "tern": "^0.24.3",
