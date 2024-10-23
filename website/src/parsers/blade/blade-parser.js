@@ -21,6 +21,7 @@ export default {
     'parentTypeIndex',
     'parent',
     'originalAbstractNode',
+    'parser', // 含めるとフリーズする
   ]),
 
   loadParser(callback) {
