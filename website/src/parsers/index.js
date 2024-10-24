@@ -1,12 +1,14 @@
-const localRequire = require.context('./', true, /^\.\/(?!utils|transpilers)[^/]+\/(transformers\/([^/]+)\/)?(codeExample\.txt|[^/]+?\.js)$/);
+const localRequire = require.context(
+  './',
+  true,
+  /^\.\/(?!utils|transpilers)[^/]+\/(transformers\/([^/]+)\/)?(codeExample\.txt|[^/]+?\.js)$/
+);
 
 function interopRequire(module) {
   return module.__esModule ? module.default : module;
 }
 
-const files =
-  localRequire.keys()
-  .map(name => name.split('/').slice(1));
+const files = localRequire.keys().map((name) => name.split('/').slice(1));
 
 const categoryByID = {};
 const parserByID = {};
@@ -19,23 +21,22 @@ const restrictedParserNames = new Set([
   'utils',
 ]);
 
-export const categories =
-  files
-  .filter(name => name[1] === 'index.js')
+export const categories = files
+  .filter((name) => name[1] === 'index.js')
   .map(([catName]) => {
     let category = localRequire(`./${catName}/index.js`);
 
     categoryByID[category.id] = category;
 
-    category.codeExample = interopRequire(localRequire(`./${catName}/codeExample.txt`))
+    category.codeExample = interopRequire(
+      localRequire(`./${catName}/codeExample.txt`)
+    );
 
-    let catFiles =
-      files
+    let catFiles = files
       .filter(([curCatName]) => curCatName === catName)
-      .map(name => name.slice(1));
+      .map((name) => name.slice(1));
 
-    category.parsers =
-      catFiles
+    category.parsers = catFiles
       .filter(([parserName]) => !restrictedParserNames.has(parserName))
       .map(([parserName]) => {
         let parser = interopRequire(localRequire(`./${catName}/${parserName}`));
@@ -44,14 +45,20 @@ export const categories =
         return parser;
       });
 
-    category.transformers =
-      catFiles
-      .filter(([dirName, , fileName]) => dirName === 'transformers' && fileName === 'index.js')
+    category.transformers = catFiles
+      .filter(
+        ([dirName, , fileName]) =>
+          dirName === 'transformers' && fileName === 'index.js'
+      )
       .map(([, transformerName]) => {
         const transformerDir = `./${catName}/transformers/${transformerName}`;
-        const transformer = interopRequire(localRequire(`${transformerDir}/index.js`));
+        const transformer = interopRequire(
+          localRequire(`${transformerDir}/index.js`)
+        );
         transformerByID[transformer.id] = transformer;
-        transformer.defaultTransform = interopRequire(localRequire(`${transformerDir}/codeExample.txt`));
+        transformer.defaultTransform = interopRequire(
+          localRequire(`${transformerDir}/codeExample.txt`)
+        );
         return transformer;
       });
 
@@ -59,11 +66,11 @@ export const categories =
   });
 
 export function getDefaultCategory() {
-  return categoryByID.javascript;
+  return categoryByID.blade;
 }
 
 export function getDefaultParser(category = getDefaultCategory()) {
-  return category.parsers.filter(p => p.showInMenu)[0];
+  return category.parsers.filter((p) => p.showInMenu)[0];
 }
 
 export function getCategoryByID(id) {
