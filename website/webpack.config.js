@@ -213,6 +213,7 @@ module.exports = Object.assign(
           ],
           loader: 'babel-loader',
           options: {
+            compact: false,
             babelrc: false,
             presets: [
               [
